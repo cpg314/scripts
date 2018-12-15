@@ -1,0 +1,3 @@
+- url: http://www.numbertheory.org/ntw/N3.html
+- selector: '#contents'
+  url: https://example.com/page.html

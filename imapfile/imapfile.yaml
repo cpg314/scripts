@@ -1,0 +1,10 @@
+headers:
+- - sender@domain1.com
+  - invoice
+  - bill
+  - - pdf
+    -jpg
+imap:
+- imap.domain.com
+- user@domain.com
+- password
