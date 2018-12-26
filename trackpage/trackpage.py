@@ -9,6 +9,9 @@ import os
 from utils import loadConfig
 from fake_useragent import UserAgent
 
+import asyncio
+import aiohttp
+
 
 def hashd(s):
     return hashlib.sha1(s.encode("utf-8")).hexdigest()
@@ -22,6 +25,7 @@ def cleanup(folder, tracked):
 
 
 def displayDiff(newhtml, oldhtml, ter):
+    out = []
     diff = list(difflib.unified_diff(oldhtml.splitlines(), newhtml.splitlines()))
     if len(diff) > 0:
         for l in diff:
@@ -32,44 +36,50 @@ def displayDiff(newhtml, oldhtml, ter):
             if l[:3] == "+++" or l[:3] == "---" or l[:2] == "@@":
                 continue
             if l[0] == '+':
-                print(ter.green(l))
+                out.append(ter.green(l))
             elif l[0] == '-':
-                print(ter.red(l))
+                out.append(ter.red(l))
             else:
-                print(l)
+                out.append(l)
     else:
-        print("No changes")
+        out.append("No changes")
+    return out
 
 
-def checkPage(page, folder, ter):
+async def checkPage(page, folder, ter):
+    out = []
     url = page["url"]
-    print(ter.bold("Checking " + url))
+    out.append(ter.bold("Checking " + url))
     try:
-        r = requests.get(url, timeout=5, headers={"User-Agent": UserAgent(fallback='Mozilla/5.0 (compatible; Googlebot/2.1;').random})
-        parsed = BeautifulSoup(r.text, 'html.parser')
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, timeout=30, headers={"User-Agent": UserAgent(fallback='Mozilla/5.0 (compatible; Googlebot/2.1;').random}) as r:
+                resp = await r.read()
+                parsed = BeautifulSoup(resp, 'html.parser')
         urlhash = hashd(url)
         filename = folder + urlhash
         if "selector" in page:
             parsed = parsed.select(page["selector"])[0]
+        if "textonly" in page and page["textonly"]:
+            parsed = parsed.text
         html = str(parsed)
         if not os.path.isfile(filename):
-            print("New URL")
+            out.append( "New URL")
         else:
             with open(filename, "r") as f:
                 oldhtml = f.read()
-                displayDiff(html, oldhtml, ter)
+                out = out + displayDiff(html, oldhtml, ter)
         with open(filename, "w") as f:
             f.write(str(html))
     except Exception as e:
-        print("Error", e)
-
+        out.append("Error: {}".format(e))
+    print("\n".join(out))
 
 def main():
     folder = os.getenv("HOME") + "/.config/trackpage/"
     tracked = loadConfig("trackpage/trackpage.yaml")
     ter = Terminal()
-    for page in tracked:
-        checkPage(page, folder, ter)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.gather(*(checkPage(page, folder, ter) for page in tracked)))
     cleanup(folder, tracked)
 
 

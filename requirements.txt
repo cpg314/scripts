@@ -25,3 +25,4 @@ unicode_slugify
 tabulate
 termcolor
 PyYAML
+aiohttp

@@ -1,14 +1,14 @@
 from setuptools import setup
-
+import time
 
 with open('requirements.txt', 'r') as f:
     lines = f.readlines()
     requirements = [l.strip().strip('\n') for l in lines if l.strip() and not l.strip().startswith('#')]
 
-scripts = ["trackpage", "bvresr", "imapfile", "gnucash2hledger", "zotexport", "radio", "readinglist2ebook", "text2ics", "tv", "slideshare", "beetsdiscogs", "flickrupload"]
+scripts = ["trackpage", "bvresr", "imapfile", "gnucash2hledger", "zotexport", "radio", "readinglist2ebook", "text2ics", "slideshare", "beetsdiscogs", "flickrupload"]
 
 setup(name="cpg314-scripts",
-      version="0.1",
+      version=int(time.time()),
       author="cpg314",
       license="MIT",
       packages=scripts + ["utils"],

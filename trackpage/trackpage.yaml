@@ -1,3 +1,6 @@
 - url: http://www.numbertheory.org/ntw/N3.html
 - selector: '#contents'
   url: https://example.com/page.html
+- selector: '#contents'
+  textonly: true
+  url: https://example.com/page2.html
