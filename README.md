@@ -14,6 +14,7 @@
 - [**readinglist2ebook**](/readinglist2ebook): Export [Pocket](https://getpocket.com) or [Wallabag](https://www.wallabag.org/) reading lists to an epub/mobi ebook.
 - [**zotexport**](/zotexport): Export [Zotero](https://www.zotero.org/) collections to a folder.
 - [**slideshare**](/slideshare):  Download slideshare presentations as PDFs.
+- [**2factors2QR**](/2factors2QR): Generate QR codes to quickly add/restore 2 factor authentication codes from a mobile device.
 
 ## Usage
 

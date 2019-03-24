@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 from blessings import Terminal
 import difflib
 import hashlib
@@ -57,6 +57,10 @@ async def checkPage(page, folder, ter):
                 parsed = BeautifulSoup(resp, 'html.parser')
         urlhash = hashd(url)
         filename = folder + urlhash
+        # Remove HTML comments
+        if not "comments" in page or not page["comments"]:
+            for c in parsed.findAll(text=lambda t: isinstance(t, Comment)):
+                c.extract()
         if "selector" in page:
             parsed = parsed.select(page["selector"])[0]
         if "textonly" in page and page["textonly"]:

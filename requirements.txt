@@ -26,3 +26,4 @@ tabulate
 termcolor
 PyYAML
 aiohttp
+qrcode

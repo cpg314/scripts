@@ -5,7 +5,7 @@ with open('requirements.txt', 'r') as f:
     lines = f.readlines()
     requirements = [l.strip().strip('\n') for l in lines if l.strip() and not l.strip().startswith('#')]
 
-scripts = ["trackpage", "bvresr", "imapfile", "gnucash2hledger", "zotexport", "radio", "readinglist2ebook", "text2ics", "slideshare", "beetsdiscogs", "flickrupload"]
+scripts = ["trackpage", "bvresr", "imapfile", "gnucash2hledger", "zotexport", "radio", "readinglist2ebook", "text2ics", "slideshare", "beetsdiscogs", "flickrupload", "2factors2QR"]
 
 setup(name="cpg314-scripts",
       version=int(time.time()),
